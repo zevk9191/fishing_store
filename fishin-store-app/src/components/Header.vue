@@ -6,14 +6,9 @@
     flat
   >
     <v-toolbar density="compact">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-      <v-img
-        :src="logo"
-        alt="PUBALKA logo"
-        max-width="50"
-        class="mr-2"
-      />
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-btn class="logo-btn" @click="onClick"></v-btn>
 
       <v-toolbar-title>PUBALKA</v-toolbar-title>
 
@@ -31,18 +26,29 @@
 </template>
 
 <script>
-import PubalkaLogo from '/P32/Fishing_store/fishing_store/fishin-store-app/src/assets/images/PUBALKA.svg';
 
 export default {
   name: 'HeaderSite', 
   data() {
     return {
-      logo: PubalkaLogo,
     };
   },
 };
 </script>
 
 <style scoped>
-
+.logo-btn {
+  background-image: url('/P32/Fishing_store/fishing_store/fishin-store-app/src/assets/images/PUBALKA.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 50px; /* Розмір кнопки */
+  height: 50px; /* Розмір кнопки */
+  padding: 0; /* Прибираємо відступи */
+  border: none; /* Прибираємо бордери */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 </style>
