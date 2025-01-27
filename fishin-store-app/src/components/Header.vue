@@ -8,7 +8,19 @@
     <v-toolbar density="compact">
 
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-btn class="logo-btn" @click="onClick"></v-btn>
+      
+      <!-- Кнопка з логотипом -->
+      <v-btn
+        :style="{
+          backgroundImage: `url(${logo})`,
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          width: '50px',
+          height: '50px',
+        }"
+        @click="onClick"
+      ></v-btn>
 
       <v-toolbar-title>PUBALKA</v-toolbar-title>
 
@@ -26,29 +38,37 @@
 </template>
 
 <script>
+import PubalkaLogo from '@/assets/images/PUBALKA.png'; // Імпорт логотипу
 
 export default {
-  name: 'HeaderSite', 
+  name: 'HeaderSite',
   data() {
     return {
+      logo: PubalkaLogo, // Збереження шляху до логотипу
     };
+  },
+  methods: {
+    onClick() {
+      console.log('Логотип натиснуто');
+    },
   },
 };
 </script>
 
+
 <style scoped>
-.logo-btn {
-  background-image: url('/P32/Fishing_store/fishing_store/fishin-store-app/src/assets/images/PUBALKA.png');
+/* .logo-btn {
+  background-image: url('VS-Fishin-store/fishin-store-app/fishing_store/fishin-store-app/src/assets/images/PUBALKA.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  width: 50px; /* Розмір кнопки */
-  height: 50px; /* Розмір кнопки */
-  padding: 0; /* Прибираємо відступи */
-  border: none; /* Прибираємо бордери */
+  width: 50px; 
+  height: 50px; 
+  padding: 0; 
+  border: none; 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
+} */
 </style>
