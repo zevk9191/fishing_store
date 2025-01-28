@@ -1,10 +1,10 @@
 <template>
   <v-app>
     <v-main>
-      <Header msg="dsds Lox" />
-      <Main msg="sdsdds Lox" />
-      <Navigation msg="Nazsdsdik Lox" />
-      <Footer msg="Nazsdsdik Lox" />
+      <Header />
+      <Main msg="main" />
+      <Navigation msg="Navigation" />
+      <Footer />
     </v-main>
   </v-app>
 </template>
