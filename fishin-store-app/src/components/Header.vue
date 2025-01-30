@@ -43,8 +43,10 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-btn icon="mdi-shopping">
+      <v-btn icon @click="$emit('open-cart')">
+        <v-icon>mdi-shopping</v-icon>
       </v-btn>
+
 
     </v-toolbar>
   </v-card>

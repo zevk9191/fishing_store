@@ -44,8 +44,8 @@
           </v-card-subtitle>
 
           <v-card-actions>
-            <v-btn color="primary" @click="addToCart(product)">
-              Додати до кошика
+            <v-btn color="primary" @click="$emit('add-to-cart', product)">
+            Додати до кошика
             </v-btn>
           </v-card-actions>
         </v-card>
