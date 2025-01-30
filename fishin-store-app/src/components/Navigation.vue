@@ -1,18 +1,28 @@
 <template>
-    <div class="navigation">
-      <h1>{{ msg }}</h1>
-      
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'NavigationSite',
-    props: {
-      msg: String
-    }
-  }
-  </script>
+  <v-list>
+    <v-list-item v-for="category in categories" :key="category.text">
+      <v-list-item-title><v-btn variant="text">{{ category.text }}</v-btn></v-list-item-title>
+    </v-list-item>
+  </v-list>
+</template>
+
+<script>
+export default {
+  name: 'NavigationSite',
+  data() {
+    return {
+      categories: [
+        { text: 'Спінінги' },
+        { text: 'Котушки' },
+        { text: 'Приманки' },
+        { text: 'Аксесуари' },
+        { text: 'Гачки' },
+      ],
+    };
+  },
+};
+</script>
+
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>

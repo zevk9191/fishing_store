@@ -1,9 +1,12 @@
 <template>
   <v-app>
+    <v-navigation-drawer v-model="drawer" temporary>
+      <Navigation />
+    </v-navigation-drawer>
+
     <v-main>
-      <Header />
+      <Header @toggle-navigation="drawer = !drawer" />
       <Main msg="main" />
-      <Navigation msg="Navigation" />
       <Footer />
     </v-main>
   </v-app>
@@ -15,20 +18,18 @@ import Main from './components/Main.vue';
 import Navigation from './components/Navigation.vue';
 import Footer from './components/Footer.vue';
 
-
-
 export default {
   name: 'App',
-
   components: {
     Header,
     Main,
     Navigation,
     Footer,
   },
-
-  data: () => ({
-    //
-  }),
-}
-</script>x
+  data() {
+    return {
+      drawer: false,
+    };
+  },
+};
+</script>

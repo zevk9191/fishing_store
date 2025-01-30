@@ -1,5 +1,5 @@
 <template>
-  <v-footer class="footer bg-grey-lighten-1">
+  <v-footer class="footer bg-grey-lighten-1" height="10%">
     <v-container>
       <v-row justify="center" no-gutters>
         <v-btn
@@ -42,11 +42,11 @@ export default {
 
 <style scoped>
 .footer {
-  position: fixed;
+  position: fixed; 
   bottom: 0;
   width: 100%;
   text-align: center;
-  padding: 10px 0;
+  /* padding: 10px 0; */
 }
 
 .footer-btn {

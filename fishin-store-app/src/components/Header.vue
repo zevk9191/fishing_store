@@ -6,7 +6,7 @@
     flat
   >
     <v-toolbar density="compact">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="$emit('toggle-navigation')"></v-app-bar-nav-icon>
 
       <!-- Кнопка з логотипом -->
       <v-btn
