@@ -33,3 +33,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+* {
+  align-items: space-between;
+  margin: 0;
+  padding: 0;
+  box-sizing: none;
+  height: 100%;
+}
+</style>

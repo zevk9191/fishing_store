@@ -16,8 +16,47 @@
       </v-menu>
     </v-btn>
   </div>
-<div class="product-section"></div>
-<div class="slider-section"></div>
+
+  <div class="product-main">
+    <div class="product-section">
+      <v-container>
+        <v-row>
+      <!-- Цикл по масиву товарів -->
+          <v-col
+            v-for="(product, index) in products"
+           :key="index"
+            cols="19" sm="6" md="2" lg="2"
+          >
+          <v-card>
+          <!-- Фото товару -->
+          <v-img
+            :src="product.image"
+            height="200px"
+            alt="Product Image"
+          ></v-img>
+
+          <v-card-title>
+            <span class="headline">{{ product.name }}</span>
+          </v-card-title>
+
+          <v-card-subtitle>
+            <span class="subheading">{{ product.price }} грн</span>
+          </v-card-subtitle>
+
+          <v-card-actions>
+            <v-btn color="primary" @click="addToCart(product)">
+              Додати до кошика
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+    </div>
+
+    <div class="slider-section"></div>
+
+  </div>
   </template>
   
   <script>
@@ -28,21 +67,93 @@
         { title: 'Ціна за зростанням' },
         { title: 'Ціна за спаданням' },
       ],
+
+      products: [
+        {
+          name: 'Товар 1',
+          price: 100,
+          image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp', // Заміни на своє реальне зображення
+        },
+        {
+          name: 'Товар 2',
+          price: 250,
+          image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp', // Заміни на своє реальне зображення
+        },
+        {
+          name: 'Товар 3',
+          price: 300,
+          image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp', // Заміни на своє реальне зображення
+        },
+        {
+          name: 'Товар 4',
+          price: 150,
+          image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp', // Заміни на своє реальне зображення
+        },
+        {
+          name: 'Товар 4',
+          price: 150,
+          image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp', // Заміни на своє реальне зображення
+        },
+        {
+          name: 'Товар 4',
+          price: 150,
+          image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp', // Заміни на своє реальне зображення
+        },
+        {
+          name: 'Товар 4',
+          price: 150,
+          image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp', // Заміни на своє реальне зображення
+        },
+        {
+          name: 'Товар 4',
+          price: 150,
+          image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp', // Заміни на своє реальне зображення
+        },
+      ],
     }),
+
+    methods: {
+    addToCart(product) {
+      console.log('Додано до кошика:', product);
+    },
+  },
   }
   </script>
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
+  * {
+    /* box-sizing: none; */
+  }
   .filter-section {
-  position: fixed; /* Зафіксувати елемент */
-  top: 60px; /* Відстань від верхньої частини (залежно від висоти header) */
-  right: 20px; /* Відстань від правого краю */
-  z-index: 1000; /* Задайте вищий пріоритет, щоб кнопка була поверх інших елементів */
+    padding: 1%;
+    display: flex;
+    justify-self: end;
+    align-items: center;
 }
 
 .product-section {
-  margin-top: 100px; 
+  
+}
+
+
+
+
+.v-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.v-card-title {
+  font-weight: bold;
+}
+
+.v-card-subtitle {
+  color: #4caf50; /* Зелений для ціни */
+}
+
+.v-btn {
+  width: 100%;
 }
   </style>
   
