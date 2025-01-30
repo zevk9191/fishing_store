@@ -1,14 +1,13 @@
 <template>
   <v-card
     color="grey-lighten-4"
-    height="200px"
+    height="50px"
     rounded="0"
     flat
   >
     <v-toolbar density="compact">
+      <v-app-bar-nav-icon @click="$emit('toggle-navigation')"></v-app-bar-nav-icon>
 
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      
       <!-- Кнопка з логотипом -->
       <v-btn
         :style="{
@@ -26,13 +25,29 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon>
+      <!-- Умовне відображення панелі пошуку -->
+      <v-text-field
+        v-if="showSearch"
+        v-model="searchQuery"
+        placeholder="Пошук..."
+        variant="outlined"
+        density="compact"
+        clearable
+        hide-details
+        class="search-field"
+        @blur="closeSearch" 
+      ></v-text-field>
+
+      <!-- Кнопка пошуку -->
+      <v-btn icon @click="toggleSearch">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
+      <v-btn icon @click="$emit('open-cart')">
+        <v-icon>mdi-shopping</v-icon>
       </v-btn>
+
+
     </v-toolbar>
   </v-card>
 </template>
@@ -44,31 +59,29 @@ export default {
   name: 'HeaderSite',
   data() {
     return {
-      logo: PubalkaLogo, // Збереження шляху до логотипу
+      logo: PubalkaLogo, // Шлях до логотипу
+      searchQuery: '', // Змінна для тексту пошуку
+      showSearch: false, // Показ чи приховування панелі пошуку
     };
   },
   methods: {
     onClick() {
       console.log('Логотип натиснуто');
     },
+    toggleSearch() {
+      this.showSearch = !this.showSearch; // Показуємо або приховуємо панель пошуку
+    },
+    closeSearch() {
+      this.showSearch = false; // Закриваємо панель після втрати фокуса
+    },
   },
 };
 </script>
 
-
 <style scoped>
-/* .logo-btn {
-  background-image: url('VS-Fishin-store/fishin-store-app/fishing_store/fishin-store-app/src/assets/images/PUBALKA.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 50px; 
-  height: 50px; 
-  padding: 0; 
-  border: none; 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-} */
+/* Додаткове стилювання для панелі пошуку */
+.search-field {
+  max-width: 300px; /* Обмеження ширини поля пошуку */
+  margin-right: 8px; /* Відступ між полем пошуку та кнопкою */
+}
 </style>
