@@ -1,5 +1,6 @@
 <template>
   <v-list>
+    
     <v-list-item v-for="category in categories" :key="category.text">
       <v-list-item-title align="center" ><v-btn variant="text" rounded="lg" width="200px">{{ category.text }}</v-btn></v-list-item-title>
     </v-list-item>

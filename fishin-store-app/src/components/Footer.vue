@@ -1,5 +1,6 @@
 <template>
-  <!-- <v-footer class="footer bg-grey-lighten-1" height="8%"> -->
+  <div>
+    <!-- Футер -->
     <div class="footer">
       <div class="row1">
         <v-btn
@@ -13,11 +14,11 @@
           {{ link.text }}
         </v-btn>
       </div>
-        <div class="row2">
-          {{ new Date().getFullYear() }} — PUBALKA
-        </div>
+      <div class="row2">
+        {{ new Date().getFullYear() }} — PUBALKA
+      </div>
     </div>
-  <!-- </v-footer> -->
+  </div>
 </template>
 
 <script>
@@ -39,14 +40,17 @@ export default {
 </script>
 
 <style scoped>
+/* Загальні стилі для футера */
 .footer {
   width: 100%;
-  margin: 0;
-  /* bottom: 0; */
   padding: 10px;
-  height: auto;
-  box-sizing: none;
   background-color: gray;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* Фіксуємо футер на дні */
 }
 
 .row1 {
@@ -60,6 +64,7 @@ export default {
   justify-content: center;
 }
 
+/* Стилі для кнопок в футері */
 .footer-btn {
   font-weight: bold;
   font-size: 14px;
