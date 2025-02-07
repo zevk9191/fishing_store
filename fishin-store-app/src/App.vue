@@ -88,13 +88,13 @@ export default {
 }
 
 .footer-fixed {
-  position: fixed;
+  position: static;
   bottom: 0;
   left: 0;
   width: 100%;
   background-color: #f8f9fa;
   z-index: 1000;
-  height: 60px; /* Фіксована висота футера */
+  height: 40px; /* Фіксована висота футера */
 }
 
 </style>
