@@ -35,7 +35,7 @@
         clearable
         hide-details
         class="search-field"
-        @blur="closeSearch" 
+        @blur="closeSearch"
       ></v-text-field>
 
       <!-- Кнопка пошуку -->
@@ -43,10 +43,27 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
+      <!-- Кнопка корзини -->
       <v-btn icon @click="$emit('open-cart')">
         <v-icon>mdi-shopping</v-icon>
       </v-btn>
 
+      <!-- Кнопка для реєстрації -->
+      <v-menu offset-y>
+        <template v-slot:activator="{ props }">
+          <v-btn icon v-bind="props">
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="onSignUp">
+            <v-list-item-title>Sign up</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="onLogIn">
+            <v-list-item-title>Log in</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
     </v-toolbar>
   </v-card>
@@ -73,6 +90,14 @@ export default {
     },
     closeSearch() {
       this.showSearch = false; // Закриваємо панель після втрати фокуса
+    },
+    onSignUp() {
+      console.log('Sign up натиснуто');
+      // Додай сюди логіку для реєстрації
+    },
+    onLogIn() {
+      console.log('Log in натиснуто');
+      // Додай сюди логіку для входу
     },
   },
 };
