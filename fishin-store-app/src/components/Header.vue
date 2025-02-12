@@ -24,7 +24,19 @@
       <v-toolbar-title>PUBALKA</v-toolbar-title>
 
       <v-spacer></v-spacer>
-
+        <!-- Умовне відображення панелі пошуку -->
+      <v-text-field
+        v-if="showSearch"
+        v-model="searchQuery"
+        placeholder="Пошук..."
+        variant="outlined"
+        density="compact"
+        clearable
+        hide-details
+        class="search-field"
+        @blur="closeSearch"
+      ></v-text-field>
+      
       <!-- Кнопка пошуку -->
       <v-btn icon @click="toggleSearch">
         <v-icon>mdi-magnify</v-icon>
@@ -50,7 +62,7 @@
           <v-list-item @click="openSignUpModal">
             <v-list-item-title>Sign up</v-list-item-title>
           </v-list-item>
-          <v-list-item>
+          <v-list-item @click="openLogInModal">
             <v-list-item-title>Log in</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -116,8 +128,47 @@
         </v-card-text>
         <v-card-actions>
           <v-btn text @click="closeSignUpModal">Cancel</v-btn>
-          <v-btn text color="primary" :disabled="!valid" @click="submitForm">
+          <v-btn text color="primary" :disabled="!valid" @click="submitSignUpForm">
             Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Модальне вікно для входу -->
+    <v-dialog v-model="showLogIn" max-width="400px">
+      <v-card>
+        <v-card-title>Log In</v-card-title>
+        <v-card-text>
+          <v-form v-model="loginValid">
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="loginEmail"
+                    :rules="emailRules"
+                    label="E-mail"
+                    required
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="loginPassword"
+                    :rules="passwordRules"
+                    label="Password"
+                    type="password"
+                    required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn text @click="closeLogInModal">Cancel</v-btn>
+          <v-btn text color="primary" :disabled="!loginValid" @click="submitLogInForm">
+            Log In
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -136,13 +187,17 @@ export default {
       searchQuery: "",
       showSearch: false,
       accountMenu: false, // Для меню акаунта
-      showSignUp: false, // Для модального вікна
+      showSignUp: false, // Для модального вікна реєстрації
+      showLogIn: false, // Для модального вікна входу
       valid: false,
+      loginValid: false,
       firstname: "",
       lastname: "",
       email: "",
       phone: "",
       password: "",
+      loginEmail: "",
+      loginPassword: "",
       nameRules: [
         (value) => !!value || "Name is required.",
         (value) =>
@@ -178,9 +233,9 @@ export default {
     closeSignUpModal() {
       this.showSignUp = false;
     },
-    submitForm() {
+    submitSignUpForm() {
       if (this.valid) {
-        console.log("Form Submitted:", {
+        console.log("Sign Up Submitted:", {
           firstname: this.firstname,
           lastname: this.lastname,
           email: this.email,
@@ -188,6 +243,22 @@ export default {
           password: this.password,
         });
         this.closeSignUpModal();
+      }
+    },
+    openLogInModal() {
+      this.showLogIn = true;
+      this.accountMenu = false; // Закриваємо меню, якщо відкриваємо модалку
+    },
+    closeLogInModal() {
+      this.showLogIn = false;
+    },
+    submitLogInForm() {
+      if (this.loginValid) {
+        console.log("Log In Submitted:", {
+          email: this.loginEmail,
+          password: this.loginPassword,
+        });
+        this.closeLogInModal();
       }
     },
   },

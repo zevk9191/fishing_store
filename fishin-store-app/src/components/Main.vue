@@ -43,9 +43,9 @@
                 <span class="subheading">{{ product.price }} грн</span>
               </v-card-subtitle>
 
-              <v-card-actions>
-                <v-btn color="primary" @click="$emit('add-to-cart', product)">
-                  Додати до кошика
+              <v-card-actions class="btn-cart">
+                <v-btn color="primary" @click="addToCart(product)" >
+                  <v-icon>mdi-cart-plus</v-icon>
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -56,11 +56,44 @@
 
     <div class="slider-section"></div>
   </div>
+
+  <!-- Діалогове вікно для кошика -->
+  <v-dialog v-model="isDialogVisible" temporary max-width="500px">
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          Кошик
+          <v-btn icon @click="clearCart">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-list >
+            <div v-for="(item, index) in cart" :key="index" class="products-in-cart">
+              <v-list-item>
+                {{ item.name }} - {{ item.price }} грн × {{ item.quantity }}
+                <v-btn icon @click="deleteProduct(item)">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-list-item>
+            </div>
+          </v-list>
+          <v-divider></v-divider>
+          <p class="text-right font-weight-bold mt-3">Загальна сума: {{ totalPrice }} грн</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="$emit('update-cart-dialog', false)">Закрити</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script>
 export default {
   name: 'MainSite',
+  props: {
+    cartDialog: Boolean,
+  },
   data: () => ({
     items: [
       { title: 'Ціна за зростанням' },
@@ -69,48 +102,71 @@ export default {
 
     originalProducts: [
       {
+        id: 1,
         name: 'Товар 1',
         price: 100,
         image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
       },
       {
+        id: 2,
         name: 'Товар 2',
         price: 250,
         image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
       },
       {
+        id: 3,
         name: 'Товар 3',
         price: 300,
         image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
       },
       {
+        id: 4,
         name: 'Товар 4',
         price: 600,
         image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
       },
       {
+        id: 5,
         name: 'Товар 5',
         price: 250,
         image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
       },
       {
+        id: 6,
         name: 'Товар 6',
         price: 350,
         image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
       },
       {
+        id: 7,
         name: 'Товар 7',
         price: 550,
         image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
       },
       {
+        id: 8,
         name: 'Товар 8',
         price: 450,
         image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
       },
     ],
     products: [],
+    cart: [],
   }),
+
+  computed: {
+    totalPrice() {
+      return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    },
+    isDialogVisible: {
+      get() {
+        return this.cartDialog;
+      },
+      set(value) {
+        this.$emit('update-cart-dialog', value);
+      },
+    },
+  },
 
   mounted() {
     // Ініціалізуємо products початковими даними
@@ -127,9 +183,30 @@ export default {
         this.products.sort((a, b) => b.price - a.price);
       }
     },
-
     addToCart(product) {
-      console.log('Додано до кошика:', product);
+      const existingProduct = this.cart.find(item => item.id === product.id);
+
+      if (existingProduct) {
+        // Якщо є, збільшуємо кількість
+        existingProduct.quantity++;
+      } else {
+        // Якщо немає, додаємо новий товар із quantity = 1
+        this.cart.push({ ...product, quantity: 1 });
+      }
+    },
+    clearCart() {
+      this.cart = [];
+    },
+    deleteProduct(product) {
+      const index = this.cart.findIndex(item => item.id === product.id);
+      if (index !== -1) {
+        if (this.cart[index].quantity > 1) {
+          this.cart[index].quantity--;
+        } else {
+          // Якщо кількість дорівнює 1, видаляємо товар із кошика
+          this.cart.splice(index, 1);
+        }
+      }
     },
   },
 };
@@ -139,7 +216,7 @@ export default {
 .filter-section {
   padding: 1%;
   display: flex;
-  justify-self: end;
+  justify-content: end;
   align-items: center;
 }
 
@@ -156,7 +233,17 @@ export default {
   color: #4caf50; /* Зелений для ціни */
 }
 
-.v-btn {
+/* .v-btn {
   width: 100%;
+} */
+.btn-cart {
+  display: flex;
+  justify-content: end;
+}
+
+.products-in-cart {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }
 </style>

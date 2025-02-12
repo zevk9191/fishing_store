@@ -5,36 +5,16 @@
     </v-navigation-drawer>
 
     <v-main>
-      <Header @toggle-navigation="drawer = !drawer" @open-cart="cartDialog = true" />
-      <Main @add-to-cart="addToCart" />
+      <Header @toggle-navigation="drawer = !drawer" @open-cart="toggleCart" />
+      <Main 
+        :cart-dialog="cartDialog" 
+        @update-cart-dialog="toggleCart" 
+      />
     </v-main>
-    
+
     <Footer class="footer-fixed" />
 
-    <!-- Діалогове вікно для кошика -->
-    <v-dialog v-model="cartDialog" max-width="500px">
-  <v-card>
-    <v-card-title class="d-flex justify-space-between align-center">
-      Кошик
-      <v-btn icon @click="clearCart">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </v-card-title>
-    <v-divider></v-divider>
-    <v-card-text>
-      <v-list>
-        <v-list-item v-for="(item, index) in cart" :key="index">
-          <v-list-item-title>{{ item.name }} - {{ item.price }} грн</v-list-item-title>
-        </v-list-item>
-      </v-list>
-      <v-divider></v-divider>
-      <p class="text-right font-weight-bold mt-3">Загальна сума: {{ totalPrice }} грн</p>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" block @click="cartDialog = false">Закрити</v-btn>
-    </v-card-actions>
-  </v-card>
-</v-dialog>
+    
   </v-app>
 </template>
 
@@ -56,20 +36,11 @@ export default {
     return {
       drawer: false,
       cartDialog: false,
-      cart: [],
     };
   },
-  computed: {
-    totalPrice() {
-      return this.cart.reduce((sum, item) => sum + item.price, 0);
-    },
-  },
   methods: {
-    addToCart(product) {
-      this.cart.push(product);
-    },
-    clearCart() {
-      this.cart = [];
+    toggleCart() {
+      this.cartDialog = !this.cartDialog;
     },
   },
 };
@@ -84,7 +55,8 @@ export default {
 
 .v-main {
   flex-grow: 1;
-  padding-bottom: 60px; /* Висота футера */
+  padding-bottom: 60px;
+  /* Висота футера */
 }
 
 .footer-fixed {
@@ -94,7 +66,8 @@ export default {
   width: 100%;
   background-color: #f8f9fa;
   z-index: 1000;
-  height: 40px; /* Фіксована висота футера */
+  height: 40px;
+  /* Фіксована висота футера */
 }
 
 </style>
