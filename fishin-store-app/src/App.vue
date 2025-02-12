@@ -8,33 +8,38 @@
       <Header @toggle-navigation="drawer = !drawer" @open-cart="cartDialog = true" />
       <Main @add-to-cart="addToCart" />
     </v-main>
-    
+
     <Footer class="footer-fixed" />
 
     <!-- Діалогове вікно для кошика -->
     <v-dialog v-model="cartDialog" max-width="500px">
-  <v-card>
-    <v-card-title class="d-flex justify-space-between align-center">
-      Кошик
-      <v-btn icon @click="clearCart">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </v-card-title>
-    <v-divider></v-divider>
-    <v-card-text>
-      <v-list>
-        <v-list-item v-for="(item, index) in cart" :key="index">
-          <v-list-item-title>{{ item.name }} - {{ item.price }} грн</v-list-item-title>
-        </v-list-item>
-      </v-list>
-      <v-divider></v-divider>
-      <p class="text-right font-weight-bold mt-3">Загальна сума: {{ totalPrice }} грн</p>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" block @click="cartDialog = false">Закрити</v-btn>
-    </v-card-actions>
-  </v-card>
-</v-dialog>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          Кошик
+          <v-btn icon @click="clearCart">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-list >
+            <div v-for="(item, index) in cart" :key="index" class="products-in-cart">
+              <v-list-item>
+                {{ item.name }} - {{ item.price }} грн × {{ item.quantity }}
+                <v-btn icon @click="deleteProduct(item)">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-list-item>
+            </div>
+          </v-list>
+          <v-divider></v-divider>
+          <p class="text-right font-weight-bold mt-3">Загальна сума: {{ totalPrice }} грн</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="cartDialog = false">Закрити</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -61,15 +66,34 @@ export default {
   },
   computed: {
     totalPrice() {
-      return this.cart.reduce((sum, item) => sum + item.price, 0);
+      return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     },
   },
   methods: {
     addToCart(product) {
-      this.cart.push(product);
+      const existingProduct = this.cart.find(item => item.id === product.id);
+
+      if (existingProduct) {
+        // Якщо є, збільшуємо кількість
+        existingProduct.quantity++;
+      } else {
+        // Якщо немає, додаємо новий товар із quantity = 1
+        this.cart.push({ ...product, quantity: 1 });
+      }
     },
     clearCart() {
       this.cart = [];
+    },
+    deleteProduct(product) {
+      const index = this.cart.findIndex(item => item.id === product.id);
+      if (index !== -1) {
+        if (this.cart[index].quantity > 1) {
+          this.cart[index].quantity--;
+        } else {
+          // Якщо кількість дорівнює 1, видаляємо товар із кошика
+          this.cart.splice(index, 1);
+        }
+      }
     },
   },
 };
@@ -84,7 +108,8 @@ export default {
 
 .v-main {
   flex-grow: 1;
-  padding-bottom: 60px; /* Висота футера */
+  padding-bottom: 60px;
+  /* Висота футера */
 }
 
 .footer-fixed {
@@ -94,7 +119,13 @@ export default {
   width: 100%;
   background-color: #f8f9fa;
   z-index: 1000;
-  height: 40px; /* Фіксована висота футера */
+  height: 40px;
+  /* Фіксована висота футера */
 }
 
+.products-in-cart {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
 </style>
