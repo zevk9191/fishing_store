@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Футер -->
     <div class="footer">
       <div class="row1">
         <v-btn
@@ -9,7 +8,8 @@
           class="mx-2 footer-btn"
           color="gray"
           variant="text"
-          :href="link.url"
+          :to="link.url" 
+          :class="{ active: $route.path === link.url }"
         >
           {{ link.text }}
         </v-btn>
@@ -27,12 +27,9 @@ export default {
   data() {
     return {
       links: [
-        { text: "HOME", url: "http://localhost:8080/" },
-        { text: "ABOUT US", url: "#" },
-        { text: "TEAM", url: "#" },
-        { text: "SERVICES", url: "#" },
-        { text: "BLOG", url: "#" },
-        { text: "CONTACT US", url: "#" }
+        { text: "HOME", url: "/" },
+        { text: "ABOUT US", url: "/about-us" },
+        { text: "CONTACT US", url: "/contact-us" }
       ],
     };
   },
@@ -40,7 +37,6 @@ export default {
 </script>
 
 <style scoped>
-/* Загальні стилі для футера */
 .footer {
   width: 100%;
   padding: 10px;
@@ -50,7 +46,6 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  /* Фіксуємо футер на дні */
 }
 
 .row1 {
@@ -64,9 +59,14 @@ export default {
   justify-content: center;
 }
 
-/* Стилі для кнопок в футері */
 .footer-btn {
   font-weight: bold;
   font-size: 14px;
+}
+
+/* Додаємо стиль для активної кнопки */
+.footer-btn.active {
+  background-color: #000; /* Наприклад, чорний фон для активної */
+  color: #fff; /* Білий текст для активної */
 }
 </style>

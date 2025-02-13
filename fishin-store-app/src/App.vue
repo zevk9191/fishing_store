@@ -9,7 +9,13 @@
       <Main 
         :cart-dialog="cartDialog" 
         @update-cart-dialog="toggleCart" 
+
+        v-if="$route.path === '/'"
       />
+
+      <router-view v-else />
+
+      
     </v-main>
 
     <Footer class="footer-fixed" />
