@@ -5,13 +5,21 @@
     </v-navigation-drawer>
 
     <v-main>
-      <Header @toggle-navigation="drawer = !drawer" @open-cart="cartDialog = true" />
-      <Main @add-to-cart="addToCart" />
+      <Header @toggle-navigation="drawer = !drawer" @open-cart="toggleCart" />
+      <Main 
+        :cart-dialog="cartDialog" 
+        @update-cart-dialog="toggleCart" 
+
+        v-if="$route.path === '/'"
+      />
+
+      <router-view v-else />
+
+      
     </v-main>
 
     <Footer class="footer-fixed" />
 
-    <!-- Діалогове вікно для кошика -->
     
   </v-app>
 </template>
@@ -33,12 +41,12 @@ export default {
   data() {
     return {
       drawer: false,
-      isCartOpen: true,
+      cartDialog: false,
     };
   },
   methods: {
     toggleCart() {
-      this.isCartOpen = !this.isCartOpen; // Перемикаємо стан кошика
+      this.cartDialog = !this.cartDialog;
     },
   },
 };
