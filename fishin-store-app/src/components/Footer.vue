@@ -27,11 +27,8 @@ export default {
   data() {
     return {
       links: [
-        { text: "HOME", url: "http://localhost:8080/" },
+        { text: "HOME", url: "#" },
         { text: "ABOUT US", url: "#" },
-        { text: "TEAM", url: "#" },
-        { text: "SERVICES", url: "#" },
-        { text: "BLOG", url: "#" },
         { text: "CONTACT US", url: "#" }
       ],
     };
