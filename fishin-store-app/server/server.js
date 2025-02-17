@@ -21,11 +21,28 @@ const db = mysql.createConnection({
 db.connect((err) => {
   if (err) throw err;
   console.log('Connected to the MySQL server.');
-  console.log('Database time:', results);
-  console.log('Connected to the database as id ' + connection.threadId);
 });
 
 // Запуск сервера
-app.listen(3306, () => {
-  console.log('Server is running on http://localhost:3306');
+app.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
 });
+
+
+
+// Приклад SQL запиту для витягування даних з таблиці "products"
+connection.query('SELECT * FROM Products', (err, results) => {
+  if (err) {
+    console.error('Error in query execution:', err);
+    return;
+  }
+  
+  // Якщо запит успішний, виводимо отримані результати
+  console.log('Products:', results);
+
+  // Наприклад, повертаємо результат у вигляді JSON
+  // Це може бути корисно для API
+  // res.json(results); // Ти можеш використати цей код в рамках express.js
+});
+
+
