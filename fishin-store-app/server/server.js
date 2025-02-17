@@ -6,10 +6,6 @@ const cors = require('cors');
 const app = express();
 app.use(cors()); // Для дозволу запитів з фронтенду
 
-app.get('/', (req, res) => {
-  res.send('Hello, world!');
-});
-
 // Підключення до MySQL
 const db = mysql.createConnection({
   host: 'localhost',
@@ -23,26 +19,21 @@ db.connect((err) => {
   console.log('Connected to the MySQL server.');
 });
 
+// Створення маршруту для отримання всіх продуктів
+app.get('/api/products', (req, res) => {
+  // Запит до бази даних для отримання всіх продуктів
+  db.query('SELECT * FROM Products', (err, results) => {  // замінено connection на db
+    if (err) {
+      console.error('Error executing query:', err.stack);
+      return res.status(500).send('Database query error');
+    }
+
+    // Якщо запит успішний, повертаємо дані у форматі JSON
+    res.json(results);
+  });
+});
+
 // Запуск сервера
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
 });
-
-
-
-// Приклад SQL запиту для витягування даних з таблиці "products"
-connection.query('SELECT * FROM Products', (err, results) => {
-  if (err) {
-    console.error('Error in query execution:', err);
-    return;
-  }
-  
-  // Якщо запит успішний, виводимо отримані результати
-  console.log('Products:', results);
-
-  // Наприклад, повертаємо результат у вигляді JSON
-  // Це може бути корисно для API
-  // res.json(results); // Ти можеш використати цей код в рамках express.js
-});
-
-
