@@ -9,7 +9,7 @@
           color="gray"
           variant="text"
           :to="link.url" 
-          :class="{ active: $route.path === link.url }"
+          :class="{ active: $route.path === link.url }" 
         >
           {{ link.text }}
         </v-btn>
@@ -29,7 +29,7 @@ export default {
       links: [
         { text: "HOME", url: "/" },
         { text: "ABOUT US", url: "/about-us" },
-        { text: "CONTACT US", url: "/CONTACT-US" }
+        { text: "CONTACT US", url: "/contact-us" }
       ],
     };
   },
