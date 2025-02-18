@@ -1,76 +1,96 @@
 <template>
-  <div class="about-container">
-    <h1>Про нас</h1>
-    <p class="about-text">Це інформація про компанію. Ми тут, щоб допомогти вам!</p>
-  </div>
+  <v-container
+    class="fill-height d-flex flex-column align-center justify-center pb-12"
+  >
+    <v-card class="pa-6 text-center w-80">
+      <v-card-title class="text-h4 font-weight-bold">Про нас</v-card-title>
+      <v-card-text class="text-h6"
+        >Це сторінка про розробників сайту та їхній внесок у
+        проєкт.</v-card-text
+      >
+    </v-card>
 
-  <div class="content">
-    <img :src="require('@/assets/images/fotoillya.jpg')" alt="Фото" class="about-image" />
-    <div class="discription">
-      <h1>Арсенюк Ілля</h1>
-      <p>Студент КПФК НУ "Львівська політехніка" групи П - 32. Займає посаду vue-розробника сайту. Відповідає за Frontend розробку.</p>
-    </div>
-  </div>
-
-  <div class="content">
-    <img :src="require('@/assets/images/fotoZahar.jpg')" alt="Фото" class="about-image" />
-    <div class="discription">
-      <h1>Бігун Захар</h1>
-      <p>Студент КПФК НУ "Львівська політехніка" групи П - 32. Займає посаду vue-розробника. Розробляє код для Frotend та для DataBase.</p>
-    </div>
-  </div>
-
-  <div class="content">
-    <img :src="require('@/assets/images/fotoHazar.jpg')" alt="Фото" class="about-image" />
-    <div class="discription">
-      <h1>Стефанишин Назарій</h1>
-      <p>Студент КПФК НУ "Львівська політехніка" групи П - 32. Займає посаду Database розробника. Відповідає за розробку бази даних.</p>
-    </div>
-  </div>
+    <v-row class="mt-6" justify="center">
+      <v-col cols="12" md="10" lg="8" v-for="person in team" :key="person.name">
+        <v-card
+          class="pa-4 d-flex flex-column flex-md-row align-center"
+          elevation="3"
+        >
+          <v-avatar size="180" class="mr-md-6 mb-4 mb-md-0">
+            <v-img
+              :src="require(`@/assets/images/${person.image}`)"
+              alt="Фото"
+              contain
+            ></v-img>
+          </v-avatar>
+          <div class="text-left">
+            <v-card-title class="text-h5 font-weight-bold">{{
+              person.name
+            }}</v-card-title>
+            <v-card-subtitle class="text-body-1">{{
+              person.role
+            }}</v-card-subtitle>
+            <v-card-text class="text-body-1">{{
+              person.description
+            }}</v-card-text>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {
-  name: 'AboutUs',
+  name: "AboutUs",
+  data() {
+    return {
+      team: [
+        {
+          name: "Арсенюк Ілля",
+          image: "fotoillya.jpg",
+          role: "Vue-розробник (Frontend)",
+          description:
+            'Студент КПФК НУ "Львівська політехніка" групи П - 32. Відповідає за розробку користувацького інтерфейсу, створення динамічних компонентів та інтеграцію з бекендом.',
+        },
+        {
+          name: "Бігун Захар",
+          image: "fotoZahar.jpg",
+          role: "Fullstack-розробник",
+          description:
+            'Студент КПФК НУ "Львівська політехніка" групи П - 32. Розробляє код для Frontend та займається роботою з базою даних, забезпечуючи взаємодію між клієнтською та серверною частинами.',
+        },
+        {
+          name: "Стефанишин Назарій",
+          image: "fotoHazar.jpg",
+          role: "Розробник бази даних (Backend)",
+          description:
+            'Студент КПФК НУ "Львівська політехніка" групи П - 32. Відповідає за проєктування, оптимізацію та впровадження бази даних, створення запитів та забезпечення збереження інформації.',
+        },
+      ],
+    };
+  },
 };
 </script>
 
 <style scoped>
-.about-container {
-  text-align: center;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.w-100 {
+  width: 100%;
 }
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+.fill-height {
+  min-height: 100vh;
 }
-
-/* Контейнер для фото та тексту */
-.content {
-  padding-bottom: 30px;
-  display: flex;
-  padding-left: 30px;
-  align-items: first center;
-  justify-content: first baseline;
-  gap: 20px; /* Відступ між фото і текстом */
-  flex-wrap: wrap; /* Щоб коректно відображалося на мобільних */
+.v-card {
+  border-radius: 16px;
 }
-
-/* Фото */
-.about-image {
-  width: 250px;
-  height: 300px;
+.v-avatar img {
   border-radius: 10px;
-  object-fit: cover;
 }
-
-/* Текст справа */
-.discription {
-  max-width: 500px;
-  font-size: 1.2rem;
+.v-card-text {
+  white-space: normal;
+  word-wrap: break-word;
+}
+.pb-12 {
+  padding-bottom: 96px;
 }
 </style>

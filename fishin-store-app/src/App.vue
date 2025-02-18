@@ -1,37 +1,39 @@
 <template>
   <v-app>
     <v-navigation-drawer v-model="drawer" temporary>
-      <Navigation />
+      <Navigation
+        @category-selected="selectedCategory = $event"
+        @close-menu="drawer = false"
+      />
     </v-navigation-drawer>
 
     <v-main>
-      <Header @toggle-navigation="drawer = !drawer" @open-cart="toggleCart" />
-      <Main 
-        :cart-dialog="cartDialog" 
-        @update-cart-dialog="toggleCart" 
-
+      <Header
+        @toggle-navigation="drawer = !drawer"
+        @open-cart="toggleCart"
+        @category-selected="selectedCategory = $event"
+      />
+      <Main
+        :cart-dialog="cartDialog"
+        :selectedCategory="selectedCategory"
+        @update-cart-dialog="toggleCart"
         v-if="$route.path === '/'"
       />
-
       <router-view v-else />
-
-      
     </v-main>
 
     <Footer class="footer-fixed" />
-
-    
   </v-app>
 </template>
 
 <script>
-import Header from './components/Header.vue';
-import Main from './components/Main.vue';
-import Navigation from './components/Navigation.vue';
-import Footer from './components/Footer.vue';
+import Header from "./components/Header.vue";
+import Main from "./components/Main.vue";
+import Navigation from "./components/Navigation.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Header,
     Main,
@@ -42,6 +44,7 @@ export default {
     return {
       drawer: false,
       cartDialog: false,
+      selectedCategory: null,
     };
   },
   methods: {
@@ -62,7 +65,6 @@ export default {
 .v-main {
   flex-grow: 1;
   padding-bottom: 60px;
-  /* Висота футера */
 }
 
 .footer-fixed {
@@ -73,7 +75,5 @@ export default {
   background-color: #f8f9fa;
   z-index: 1000;
   height: 40px;
-  /* Фіксована висота футера */
 }
-
 </style>

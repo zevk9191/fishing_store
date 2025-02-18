@@ -8,28 +8,26 @@
           class="mx-2 footer-btn"
           color="gray"
           variant="text"
-          :to="link.url" 
-          :class="{ active: $route.path === link.url }" 
+          :to="link.url"
+          :class="{ active: $route.path === link.url }"
         >
           {{ link.text }}
         </v-btn>
       </div>
-      <div class="row2">
-        {{ new Date().getFullYear() }} — PUBALKA
-      </div>
+      <div class="row2">{{ new Date().getFullYear() }} — Fishing Store</div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'FooterSite',
+  name: "FooterSite",
   data() {
     return {
       links: [
         { text: "HOME", url: "/" },
         { text: "ABOUT US", url: "/about-us" },
-        { text: "CONTACT US", url: "/contact-us" }
+        { text: "CONTACT US", url: "/contact-us" },
       ],
     };
   },
@@ -40,7 +38,7 @@ export default {
 .footer {
   width: 100%;
   padding: 10px;
-  background-color: gray;
+  background-color: rgb(230, 230, 230);
   box-sizing: border-box;
   position: absolute;
   bottom: 0;
