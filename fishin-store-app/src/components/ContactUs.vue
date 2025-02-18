@@ -1,7 +1,5 @@
 <template>
-  <v-container
-    class="d-flex flex-column align-center justify-center fill-height"
-  >
+  <v-container class="d-flex flex-column align-center justify-center">
     <v-card class="pa-6 text-center w-100">
       <v-card-title class="text-h4 font-weight-bold"
         >Зв'яжіться з нами</v-card-title
