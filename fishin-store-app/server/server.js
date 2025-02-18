@@ -75,6 +75,20 @@ app.get("/api/products", (req, res) => {
   });
 });
 
+app.get("/api/search", (req, res) => {
+  const search = req.query.search ? `%${req.query.search}%` : "%";
+
+  const query = "SELECT * FROM Products WHERE name LIKE ?";
+
+  db.query(query, [search], (err, results) => {
+    if (err) {
+      console.error("Error executing search query:", err.stack);
+      return res.status(500).send("Database query error");
+    }
+    res.json(results);
+  });
+});
+
 // Запуск сервера
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
