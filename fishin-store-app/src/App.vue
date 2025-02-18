@@ -12,15 +12,10 @@
 
         v-if="$route.path === '/'"
       />
-
       <router-view v-else />
-
-      
     </v-main>
 
     <Footer class="footer-fixed" />
-
-    
   </v-app>
 </template>
 
@@ -62,7 +57,6 @@ export default {
 .v-main {
   flex-grow: 1;
   padding-bottom: 60px;
-  /* Висота футера */
 }
 
 .footer-fixed {
@@ -73,7 +67,6 @@ export default {
   background-color: #f8f9fa;
   z-index: 1000;
   height: 40px;
-  /* Фіксована висота футера */
 }
 
 </style>

@@ -18,7 +18,7 @@
           width: '50px',
           height: '50px',
         }"
-        @click="onClick"
+        @click="goHome"
       ></v-btn>
 
       <v-toolbar-title>PUBALKA</v-toolbar-title>
@@ -260,6 +260,9 @@ export default {
         });
         this.closeLogInModal();
       }
+    },
+    goHome() {
+      this.$router.push('/');
     },
   },
 };
