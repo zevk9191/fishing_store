@@ -12,10 +12,12 @@
         @toggle-navigation="drawer = !drawer"
         @open-cart="toggleCart"
         @category-selected="selectedCategory = $event"
+        @search-changed="searchQuery = $event"
       />
       <Main
         :cart-dialog="cartDialog"
         :selectedCategory="selectedCategory"
+        :search-query="searchQuery"
         @update-cart-dialog="toggleCart"
         v-if="$route.path === '/'"
       />
@@ -45,6 +47,7 @@ export default {
       drawer: false,
       cartDialog: false,
       selectedCategory: null,
+      searchQuery: "",
     };
   },
   methods: {

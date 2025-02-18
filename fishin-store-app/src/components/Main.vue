@@ -111,6 +111,7 @@ export default {
   props: {
     cartDialog: Boolean,
     selectedCategory: Number,
+    searchQuery: String,
   },
   data() {
     return {
@@ -147,16 +148,28 @@ export default {
   methods: {
     async fetchProducts() {
       try {
-        const response = await axios.get("http://localhost:3000/api/products", {
-          params: {
-            page: this.currentPage, // Використовуємо поточну сторінку
-            limit: this.pageSize,
-            category: this.selectedCategory || null,
-          },
-        });
+        const params = {
+          page: this.currentPage,
+          limit: this.pageSize,
+          category: this.selectedCategory || null,
+        };
 
-        this.products = response.data.products; // Оновлюємо список товарів
-        this.totalPages = response.data.totalPages; // Оновлюємо загальну кількість сторінок
+        // Якщо є пошуковий запит, додаємо його в параметри
+        if (this.searchQuery) {
+          params.search = this.searchQuery;
+        }
+
+        const response = await axios.get(
+          `http://localhost:3000/api/${
+            this.searchQuery ? "search" : "products"
+          }`,
+          { params }
+        );
+
+        this.products = this.searchQuery
+          ? response.data
+          : response.data.products;
+        this.totalPages = this.searchQuery ? 1 : response.data.totalPages;
       } catch (error) {
         console.error("Помилка при отриманні продуктів:", error);
       }
@@ -210,6 +223,9 @@ export default {
     selectedCategory() {
       this.currentPage = 1;
       this.fetchProducts();
+    },
+    searchQuery() {
+      this.fetchProducts(); // Викликаємо пошук при зміні пошукового запиту
     },
   },
 

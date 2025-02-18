@@ -30,6 +30,8 @@
         hide-details
         class="search-field"
         @blur="closeSearch"
+        @input="handleSearch"
+        @click:clear="clearSearch"
       ></v-text-field>
 
       <!-- Кнопка пошуку -->
@@ -187,7 +189,7 @@ export default {
     return {
       logo: PubalkaLogo,
       searchQuery: "",
-      showSearch: false,
+      showSearch: true,
       accountMenu: false, // Для меню акаунта
       showSignUp: false, // Для модального вікна реєстрації
       showLogIn: false, // Для модального вікна входу
@@ -268,6 +270,12 @@ export default {
     goHome() {
       this.$router.push("/");
       this.$emit("category-selected", null);
+    },
+    handleSearch() {
+      this.$emit("search-changed", this.searchQuery);
+    },
+    clearSearch() {
+      this.$emit("search-changed", ""); // Очищаємо пошуковий запит
     },
   },
 };
