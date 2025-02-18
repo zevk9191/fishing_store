@@ -267,6 +267,7 @@ export default {
     },
     goHome() {
       this.$router.push("/");
+      this.$emit("category-selected", null);
     },
   },
 };

@@ -8,7 +8,11 @@
     </v-navigation-drawer>
 
     <v-main>
-      <Header @toggle-navigation="drawer = !drawer" @open-cart="toggleCart" />
+      <Header
+        @toggle-navigation="drawer = !drawer"
+        @open-cart="toggleCart"
+        @category-selected="selectedCategory = $event"
+      />
       <Main
         :cart-dialog="cartDialog"
         :selectedCategory="selectedCategory"
