@@ -30,7 +30,7 @@
             <v-card>
               <!-- Фото товару -->
               <v-img
-                :src="product.image"
+                :src="product.image_url"
                 height="200px"
                 alt="Product Image"
               ></v-img>
@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: 'MainSite',
   props: {
@@ -100,59 +101,19 @@ export default {
       { title: 'Ціна за спаданням' },
     ],
 
-    originalProducts: [
-      {
-        id: 1,
-        name: 'Товар 1',
-        price: 100,
-        image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
-      },
-      {
-        id: 2,
-        name: 'Товар 2',
-        price: 250,
-        image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
-      },
-      {
-        id: 3,
-        name: 'Товар 3',
-        price: 300,
-        image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
-      },
-      {
-        id: 4,
-        name: 'Товар 4',
-        price: 600,
-        image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
-      },
-      {
-        id: 5,
-        name: 'Товар 5',
-        price: 250,
-        image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
-      },
-      {
-        id: 6,
-        name: 'Товар 6',
-        price: 350,
-        image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
-      },
-      {
-        id: 7,
-        name: 'Товар 7',
-        price: 550,
-        image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
-      },
-      {
-        id: 8,
-        name: 'Товар 8',
-        price: 450,
-        image: 'https://kormak.ua/content/images/43/390x390l80mc0/spininh-teleskopichnyi-reflex-fr-2.40m-20-80hr.-213-2080-24-68482102686956.webp',
-      },
-    ],
+    originalProducts: [],
     products: [],
     cart: [],
   }),
+
+  async created() {
+    try {
+      const response = await axios.get("http://localhost:3000/api/products/first10");
+      this.products = response.data;
+    } catch (error) {
+      console.error("Помилка при отриманні продуктів:", error);
+    }
+  },
 
   computed: {
     totalPrice() {
