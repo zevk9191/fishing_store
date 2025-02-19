@@ -1,10 +1,14 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { jwtDecode as decode } from "jwt-decode";
+
+
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
     token: localStorage.getItem("token") || null,
+    userRole: localStorage.getItem("userRole") || null,
     isSignUpVisible: false,
     isLoginVisible: false,
     error: null,
@@ -37,9 +41,15 @@ export const useAuthStore = defineStore("auth", {
           email: credentials.email,
           password: credentials.password,
         });
-        this.user = response.data.user;
+
         this.token = response.data.token;
         localStorage.setItem("token", this.token);
+
+        const decoded = decode(this.token);
+        this.userRole = decoded.position; // Отримуємо роль з токена
+        localStorage.setItem("userRole", this.userRole);
+
+        this.user = response.data.user;
         this.error = null;
       } catch (error) {
         this.error = error.response?.data?.message || "Login failed";
@@ -48,17 +58,16 @@ export const useAuthStore = defineStore("auth", {
     logout() {
       this.user = null;
       this.token = null;
+      this.userRole = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("userRole");
     },
     async fetchUser() {
       if (!this.token) return;
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/auth/user",
-          {
-            headers: { Authorization: `Bearer ${this.token}` },
-          }
-        );
+        const response = await axios.get("http://localhost:3000/api/auth/user", {
+          headers: { Authorization: `Bearer ${this.token}` },
+        });
         this.user = response.data;
       } catch (error) {
         this.logout();

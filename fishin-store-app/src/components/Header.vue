@@ -54,7 +54,7 @@
 
         <v-list>
           <template v-if="authStore.token">
-            <v-list-item to="/profile">
+            <v-list-item @click="goToProfile">
               <v-list-item-title>Profile</v-list-item-title>
             </v-list-item>
             <v-list-item @click="authStore.logout">
@@ -124,6 +124,9 @@ export default {
     },
     clearSearch() {
       this.$emit("search-changed", ""); // Очищаємо пошуковий запит
+    },
+    goToProfile() {
+      this.$router.push({ path: "/profile", query: { role: this.authStore.userRole } });
     },
   },
 };
