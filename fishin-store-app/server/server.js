@@ -1,11 +1,17 @@
+require("dotenv").config();
+
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 
+dotenv.config();
 const app = express();
 app.use(cors());
+app.use(express.json());
 
-// Підключення до MySQL
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -19,6 +25,97 @@ db.connect((err) => {
     return;
   }
   console.log("Connected to the MySQL server.");
+});
+
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user.id, position: user.position },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+};
+
+app.post("/api/signup", async (req, res) => {
+  const { first_name, last_name, phone_number, email, password } = req.body;
+
+  if (!first_name || !last_name || !phone_number || !email || !password) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  db.query(
+    "INSERT INTO Users (first_name, last_name, phone_number, email, password) VALUES (?, ?, ?, ?, ?)",
+    [first_name, last_name, phone_number, email, hashedPassword],
+    (err, result) => {
+      if (err) {
+        if (err.code === "ER_DUP_ENTRY") {
+          return res.status(400).json({ message: "Email already exists" });
+        }
+        console.error("Error inserting user:", err);
+        return res.status(500).json({ message: "Database error" });
+      }
+      res.status(201).json({ message: "User registered successfully" });
+    }
+  );
+});
+
+app.post("/api/login", (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  db.query(
+    "SELECT * FROM Users WHERE email = ?",
+    [email],
+    async (err, results) => {
+      if (err) return res.status(500).json({ message: "Database error" });
+      if (results.length === 0)
+        return res.status(401).json({ message: "Invalid credentials" });
+
+      const user = results[0];
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch)
+        return res.status(401).json({ message: "Invalid credentials" });
+
+      // console.log("JWT_SECRET:", process.env.JWT_SECRET); перевірка входу
+      const token = generateToken(user);
+      res.json({
+        user: {
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          position: user.position,
+        },
+        token,
+      });
+    }
+  );
+});
+
+const authenticateToken = (req, res, next) => {
+  const token = req.headers["authorization"]?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "Access denied" });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: "Invalid token" });
+    req.user = user;
+    next();
+  });
+};
+
+app.get("/api/auth/user", authenticateToken, (req, res) => {
+  db.query(
+    "SELECT id, first_name, last_name, email, phone_number, position FROM Users WHERE id = ?",
+    [req.user.id],
+    (err, results) => {
+      if (err) return res.status(500).json({ message: "Database error" });
+      if (results.length === 0)
+        return res.status(404).json({ message: "User not found" });
+      res.json(results[0]);
+    }
+  );
 });
 
 app.get("/api/products", (req, res) => {

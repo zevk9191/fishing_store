@@ -10,20 +10,18 @@
     <v-main>
       <Header
         @toggle-navigation="drawer = !drawer"
-        @open-cart="toggleCart"
         @category-selected="selectedCategory = $event"
         @search-changed="searchQuery = $event"
       />
       <Main
-        :cart-dialog="cartDialog"
         :selectedCategory="selectedCategory"
         :search-query="searchQuery"
-        @update-cart-dialog="toggleCart"
         v-if="$route.path === '/'"
       />
       <router-view v-else />
     </v-main>
 
+    <Cart />
     <Footer class="footer-fixed" />
   </v-app>
 </template>
@@ -33,27 +31,23 @@ import Header from "./components/Header.vue";
 import Main from "./components/Main.vue";
 import Navigation from "./components/Navigation.vue";
 import Footer from "./components/Footer.vue";
+import Cart from "./components/Cart.vue";
 
 export default {
   name: "App",
   components: {
     Header,
     Main,
+    Cart,
     Navigation,
     Footer,
   },
   data() {
     return {
       drawer: false,
-      cartDialog: false,
       selectedCategory: null,
       searchQuery: "",
     };
-  },
-  methods: {
-    toggleCart() {
-      this.cartDialog = !this.cartDialog;
-    },
   },
 };
 </script>
