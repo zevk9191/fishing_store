@@ -86,6 +86,14 @@ export default {
     const phoneRules = [(v) => !!v || "Phone is required"];
     const passwordRules = [(v) => !!v || "Password is required"];
 
+    const clearFields = () => {
+      firstname.value = "";
+      lastname.value = "";
+      email.value = "";
+      phone.value = "";
+      password.value = "";
+    };
+
     const submitSignUpForm = async () => {
       const { valid } = await form.value.validate();
       if (!valid) return;
@@ -100,6 +108,7 @@ export default {
 
       if (!authStore.error) {
         authStore.toggleSignUp();
+        clearFields();
       }
     };
 
@@ -116,6 +125,7 @@ export default {
       phoneRules,
       passwordRules,
       submitSignUpForm,
+      clearFields,
     };
   },
 };

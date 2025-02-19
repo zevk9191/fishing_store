@@ -53,12 +53,22 @@
         </template>
 
         <v-list>
-          <v-list-item @click="authStore.toggleSignUp()">
-            <v-list-item-title>Sign up</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="authStore.toggleLogin()">
-            <v-list-item-title>Log in</v-list-item-title>
-          </v-list-item>
+          <template v-if="authStore.token">
+            <v-list-item to="/profile">
+              <v-list-item-title>Profile</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="authStore.logout">
+              <v-list-item-title>Log out</v-list-item-title>
+            </v-list-item>
+          </template>
+          <template v-else>
+            <v-list-item @click="authStore.toggleSignUp">
+              <v-list-item-title>Sign up</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="authStore.toggleLogin">
+              <v-list-item-title>Log in</v-list-item-title>
+            </v-list-item>
+          </template>
         </v-list>
       </v-menu>
     </v-toolbar>
