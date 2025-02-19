@@ -5,12 +5,13 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
+const multer = require("multer");
+const path = require("path");
 
-dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -26,6 +27,17 @@ db.connect((err) => {
   }
   console.log("Connected to the MySQL server.");
 });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -79,7 +91,6 @@ app.post("/api/login", (req, res) => {
       if (!passwordMatch)
         return res.status(401).json({ message: "Invalid credentials" });
 
-      // console.log("JWT_SECRET:", process.env.JWT_SECRET); перевірка входу
       const token = generateToken(user);
       res.json({
         user: {
@@ -105,6 +116,8 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+// ЗАХАР ПОДИВИСЬ НА ЦЕЙ ШЛЯХ І ПЕРЕКОНАЙСЯ ЩО ВІН ПРАВИЛЬНИЙ
+// app.get("/api/auth/user", authenticateToken, (req, res) => {
 app.get("/api/auth/user", authenticateToken, (req, res) => {
   db.query(
     "SELECT id, first_name, last_name, email, phone_number, position FROM Users WHERE id = ?",
@@ -118,6 +131,25 @@ app.get("/api/auth/user", authenticateToken, (req, res) => {
   );
 });
 
+app.post("/api/products", upload.single("image"), (req, res) => {
+  const { name, price, category_id } = req.body;
+  const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+
+  db.query(
+    "INSERT INTO Products (name, price, category_id, image_url) VALUES (?, ?, ?, ?)",
+    [name, price, category_id, image_url],
+    (err, result) => {
+      if (err) {
+        console.error("Error inserting product:", err);
+        return res.status(500).json({ message: "Database error" });
+      }
+      res.status(201).json({ message: "Product added successfully" });
+    }
+  );
+});
+
+
+
 app.get("/api/products", (req, res) => {
   const page = req.query.page ? parseInt(req.query.page) : null;
   const limit = req.query.limit ? parseInt(req.query.limit) : null;
@@ -126,13 +158,11 @@ app.get("/api/products", (req, res) => {
   let query = "SELECT * FROM Products";
   let queryParams = [];
 
-  // Додаємо фільтр за категорією, якщо він є
   if (category) {
     query += " WHERE category_id = ?";
     queryParams.push(category);
   }
 
-  // Додаємо пагінацію, якщо вона є
   if (page && limit) {
     const offset = (page - 1) * limit;
     query += " LIMIT ? OFFSET ?";
@@ -145,7 +175,6 @@ app.get("/api/products", (req, res) => {
       return res.status(500).send("Database query error");
     }
 
-    // Якщо є пагінація, підраховуємо загальну кількість товарів у цій категорії
     if (page && limit) {
       let countQuery = "SELECT COUNT(*) as total FROM Products";
       let countParams = [];
@@ -186,12 +215,6 @@ app.get("/api/search", (req, res) => {
   });
 });
 
-// Запуск сервера
-app.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000");
-});
-
-// Маршрут для отримання категорій товарів
 app.get("/api/categories", (req, res) => {
   db.query("SELECT * FROM Category", (err, results) => {
     if (err) {
@@ -200,4 +223,8 @@ app.get("/api/categories", (req, res) => {
     }
     res.json(results);
   });
+});
+
+app.listen(3000, () => {
+  console.log("Server is running on http://localhost:3000");
 });

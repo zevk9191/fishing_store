@@ -68,9 +68,14 @@ export default {
       });
       if (!authStore.error) {
         authStore.toggleLogin();
+        clearFields();
       }
     };
 
+    const clearFields = () => {
+      loginEmail.value = "";
+      loginPassword.value = "";
+    };
     return {
       authStore,
       loginEmail,

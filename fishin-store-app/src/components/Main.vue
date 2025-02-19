@@ -1,5 +1,6 @@
 <template>
   <div class="filter-section">
+    <v-btn v-if="isAdmin" color="success" @click="goToAddProduct">Додати новий товар</v-btn>
     <v-btn variant="text">
       Filter
       <v-icon icon="mdi-filter"></v-icon>
@@ -68,7 +69,10 @@
 
 <script>
 import axios from "axios";
+import { computed } from "vue"; // Додано імпорт computed
 import { useCartStore } from "@/store/cartStore";
+import { useAuthStore } from "@/store/useAuthStore";
+
 export default {
   name: "MainSite",
   props: {
@@ -78,7 +82,10 @@ export default {
 
   setup() {
     const cartStore = useCartStore();
-    return { cartStore };
+    const authStore = useAuthStore();
+    const isAdmin = computed(() => authStore.userRole === 'Admin');
+
+    return { cartStore, authStore, isAdmin };
   },
 
   data() {
@@ -147,6 +154,9 @@ export default {
     },
     addToCart(product) {
       this.cartStore.addToCart(product);
+    },
+    goToAddProduct() {
+      this.$router.push("/add-product");
     },
   },
 

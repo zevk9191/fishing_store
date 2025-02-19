@@ -4,7 +4,7 @@
         <v-card-title>Адмін Панель</v-card-title>
         <v-card-subtitle>Ваша роль: {{ userRole }}</v-card-subtitle>
         <v-card-text>
-          <v-btn color="primary" @click="showRole">Показати роль</v-btn>
+          <v-btn v-if="isAdmin" color="success" @click="goToAddProduct">Додати новий товар</v-btn>
         </v-card-text>
       </v-card>
     </v-container>
@@ -18,16 +18,16 @@
     setup() {
       const authStore = useAuthStore();
       const userRole = computed(() => authStore.userRole);
+      const isAdmin = computed(() => authStore.userRole === 'Admin');
   
-      const showRole = () => {
-        alert(`Ваша роль: ${userRole.value}`);
+      const goToAddProduct = () => {
+        this.$router.push("/add-product");
       };
   
-      return { userRole, showRole };
+      return { userRole, isAdmin, goToAddProduct };
     },
   };
   </script>
-
-<style scoped>
-
-</style>
+  
+  <style scoped>
+  </style>

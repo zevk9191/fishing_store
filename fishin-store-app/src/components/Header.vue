@@ -57,7 +57,7 @@
             <v-list-item @click="goToProfile">
               <v-list-item-title>Profile</v-list-item-title>
             </v-list-item>
-            <v-list-item @click="authStore.logout">
+            <v-list-item @click="goHomeAfterLogout">
               <v-list-item-title>Log out</v-list-item-title>
             </v-list-item>
           </template>
@@ -118,6 +118,10 @@ export default {
     goHome() {
       this.$router.push("/");
       this.$emit("category-selected", null);
+    },
+    goHomeAfterLogout() {
+      this.authStore.logout();
+      this.goHome();
     },
     handleSearch() {
       this.$emit("search-changed", this.searchQuery);

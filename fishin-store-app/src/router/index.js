@@ -4,7 +4,8 @@ import AboutUs from '@/components/AboutUs.vue';
 import ContactUs from '@/components/ContactUs.vue';
 import UserProfil from '@/components/UserProfil.vue';
 import AdminProfil from '@/components/AdminProfil.vue';
-import Profil from '@/components/Profil.vue'; // Імпорт нового компонента
+import Profil from '@/components/Profil.vue';
+import AddProduct from '@/components/AddProduct.vue'; // Імпорт нового компонента
 import Login from '@/components/Login.vue'; 
 import { useAuthStore } from '@/store/useAuthStore';
 
@@ -46,6 +47,12 @@ const routes = [
     name: 'Profile',
     component: Profil,
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/add-product',
+    name: 'AddProduct',
+    component: AddProduct,
+    meta: { requiresAuth: true, role: 'Admin' },
   },
 ];
 
