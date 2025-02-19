@@ -40,7 +40,7 @@
       </v-btn>
 
       <!-- Кнопка корзини -->
-      <v-btn icon @click="$emit('open-cart')">
+      <v-btn icon @click="cartStore.toggleCartDialog()">
         <v-icon>mdi-shopping</v-icon>
       </v-btn>
 
@@ -182,9 +182,16 @@
 
 <script>
 import PubalkaLogo from "@/assets/images/PUBALKA.png";
+import { useCartStore } from "@/store/cartStore";
 
 export default {
   name: "HeaderSite",
+
+  setup() {
+    const cartStore = useCartStore();
+    return { cartStore };
+  },
+
   data() {
     return {
       logo: PubalkaLogo,

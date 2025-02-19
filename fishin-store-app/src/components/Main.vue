@@ -64,60 +64,27 @@
       </v-btn>
     </v-container>
   </div>
-
-  <!-- Діалогове вікно для кошика -->
-  <v-dialog v-model="isDialogVisible" temporary max-width="500px">
-    <v-card>
-      <v-card-title class="d-flex justify-space-between align-center">
-        Кошик
-        <v-btn icon @click="clearCart">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-divider></v-divider>
-      <v-card-text>
-        <v-list>
-          <div
-            v-for="(item, index) in cart"
-            :key="index"
-            class="products-in-cart"
-          >
-            <v-list-item>
-              {{ item.name }} - {{ item.price }} грн × {{ item.quantity }}
-              <v-btn icon @click="deleteProduct(item)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </v-list-item>
-          </div>
-        </v-list>
-        <v-divider></v-divider>
-        <p class="text-right font-weight-bold mt-3">
-          Загальна сума: {{ totalPrice }} грн
-        </p>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" block @click="$emit('update-cart-dialog', false)"
-          >Закрити</v-btn
-        >
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 </template>
 
 <script>
 import axios from "axios";
+import { useCartStore } from "@/store/cartStore";
 export default {
   name: "MainSite",
   props: {
-    cartDialog: Boolean,
     selectedCategory: Number,
     searchQuery: String,
   },
+
+  setup() {
+    const cartStore = useCartStore();
+    return { cartStore };
+  },
+
   data() {
     return {
       items: [{ title: "Ціна за зростанням" }, { title: "Ціна за спаданням" }],
       products: [],
-      cart: [],
       currentPage: 1,
       pageSize: 6,
       totalPages: 1,
@@ -125,20 +92,6 @@ export default {
   },
 
   computed: {
-    totalPrice() {
-      return this.cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
-    },
-    isDialogVisible: {
-      get() {
-        return this.cartDialog;
-      },
-      set(value) {
-        this.$emit("update-cart-dialog", value);
-      },
-    },
     paginatedProducts() {
       const start = (this.currentPage - 1) * this.pageSize;
       return this.products.slice(start, start + this.pageSize);
@@ -154,7 +107,6 @@ export default {
           category: this.selectedCategory || null,
         };
 
-        // Якщо є пошуковий запит, додаємо його в параметри
         if (this.searchQuery) {
           params.search = this.searchQuery;
         }
@@ -177,13 +129,13 @@ export default {
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
-        this.fetchProducts(); // Завантажуємо нові товари після зміни сторінки
+        this.fetchProducts();
       }
     },
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
-        this.fetchProducts(); // Завантажуємо нові товари після зміни сторінки
+        this.fetchProducts();
       }
     },
     sortProducts(index) {
@@ -194,25 +146,7 @@ export default {
       }
     },
     addToCart(product) {
-      const existingProduct = this.cart.find((item) => item.id === product.id);
-      if (existingProduct) {
-        existingProduct.quantity++;
-      } else {
-        this.cart.push({ ...product, quantity: 1 });
-      }
-    },
-    clearCart() {
-      this.cart = [];
-    },
-    deleteProduct(product) {
-      const index = this.cart.findIndex((item) => item.id === product.id);
-      if (index !== -1) {
-        if (this.cart[index].quantity > 1) {
-          this.cart[index].quantity--;
-        } else {
-          this.cart.splice(index, 1);
-        }
-      }
+      this.cartStore.addToCart(product);
     },
   },
 
@@ -256,12 +190,6 @@ export default {
   color: #4caf50; /* Зелений для ціни */
 }
 
-.products-in-cart {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
 .product-item {
   display: flex;
   justify-content: center;
