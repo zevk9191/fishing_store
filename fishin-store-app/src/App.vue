@@ -49,7 +49,6 @@ export default {
       searchQuery: "",
     };
   },
-  methods: {},
 };
 </script>
 
