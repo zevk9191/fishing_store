@@ -79,6 +79,7 @@ app.post("/api/login", (req, res) => {
       if (!passwordMatch)
         return res.status(401).json({ message: "Invalid credentials" });
 
+      // console.log("JWT_SECRET:", process.env.JWT_SECRET); перевірка входу
       const token = generateToken(user);
       res.json({
         user: {
