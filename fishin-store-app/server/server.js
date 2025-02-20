@@ -28,17 +28,6 @@ db.connect((err) => {
   console.log("Connected to the MySQL server.");
 });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage });
-
 const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, position: user.position },
