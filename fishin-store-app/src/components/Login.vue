@@ -76,6 +76,7 @@ export default {
       loginEmail.value = "";
       loginPassword.value = "";
     };
+
     return {
       authStore,
       loginEmail,
