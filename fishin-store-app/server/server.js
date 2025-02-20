@@ -237,6 +237,54 @@ app.get("/api/categories", (req, res) => {
   });
 });
 
+app.get("/api/user", authenticateToken, (req, res) => {
+  const userId = req.user.id; // ID користувача з токена
+
+  db.query(
+    "SELECT first_name, last_name, phone_number FROM Users WHERE id = ?",
+    [userId],
+    (err, result) => {
+      if (err) {
+        console.error("Помилка отримання користувача:", err);
+        return res.status(500).json({ message: "Помилка сервера" });
+      }
+
+      if (result.length === 0) {
+        return res.status(404).json({ message: "Користувача не знайдено" });
+      }
+
+      res.json(result[0]); // Повертаємо перший (єдиний) запис
+    }
+  );
+});
+
+app.put("/api/user", authenticateToken, (req, res) => {
+  const userId = req.user.id; // ID користувача з токена
+  let { firstName, lastName, phone } = req.body;
+
+  // Перевіряємо, чи всі поля заповнені
+  if (!firstName || !lastName || !phone) {
+    return res.status(400).json({ message: "Усі поля повинні бути заповнені" });
+  }
+
+  db.query(
+    "UPDATE Users SET first_name = ?, last_name = ?, phone_number = ? WHERE id = ?",
+    [firstName, lastName, phone, userId],
+    (err, result) => {
+      if (err) {
+        console.error("Помилка оновлення користувача:", err);
+        return res.status(500).json({ message: "Помилка сервера" });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Користувача не знайдено" });
+      }
+
+      res.json({ message: "Дані оновлено успішно" });
+    }
+  );
+});
+
 app.listen(3000, () => {
   console.log("Server is running on http://localhost:3000");
 });

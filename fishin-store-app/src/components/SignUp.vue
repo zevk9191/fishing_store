@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="authStore.isSignUpVisible" max-width="500px">
-    <v-card>
-      <v-card-title>Sign Up</v-card-title>
+    <v-card class="dialog-card">
+      <v-card-title class="dialog-title">Sign Up</v-card-title>
       <v-card-text>
         <v-form ref="form">
           <v-container>
@@ -12,6 +12,7 @@
                   :rules="nameRules"
                   label="First name"
                   required
+                  class="custom-input"
                 ></v-text-field>
               </v-col>
 
@@ -21,6 +22,7 @@
                   :rules="nameRules"
                   label="Last name"
                   required
+                  class="custom-input"
                 ></v-text-field>
               </v-col>
 
@@ -30,6 +32,7 @@
                   :rules="emailRules"
                   label="E-mail"
                   required
+                  class="custom-input"
                 ></v-text-field>
               </v-col>
 
@@ -39,6 +42,7 @@
                   :rules="phoneRules"
                   label="Phone"
                   required
+                  class="custom-input"
                 ></v-text-field>
               </v-col>
 
@@ -49,18 +53,23 @@
                   label="Password"
                   type="password"
                   required
+                  class="custom-input"
                 ></v-text-field>
               </v-col>
             </v-row>
           </v-container>
-          <v-alert v-if="authStore.error" type="error">{{
-            authStore.error
-          }}</v-alert>
+          <v-alert v-if="authStore.error" type="error" class="error-alert">
+            {{ authStore.error }}
+          </v-alert>
         </v-form>
       </v-card-text>
-      <v-card-actions>
-        <v-btn text @click="authStore.toggleSignUp">Cancel</v-btn>
-        <v-btn text color="primary" @click="submitSignUpForm"> Submit </v-btn>
+      <v-card-actions class="dialog-actions">
+        <v-btn text class="cancel-btn" @click="authStore.toggleSignUp"
+          >Cancel</v-btn
+        >
+        <v-btn text class="submit-btn" @click="submitSignUpForm">
+          Submit
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -131,4 +140,42 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.dialog-card {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.dialog-title {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.custom-input {
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.error-alert {
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  color: #f44336;
+}
+
+.submit-btn {
+  background-color: #4caf50;
+  color: white;
+}
+</style>

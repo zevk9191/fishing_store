@@ -43,13 +43,14 @@
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 export default {
   name: "NavigationSite",
   emits: ["category-selected"],
   setup(_, { emit }) {
     const categories = ref([]);
-
+    const router = useRouter();
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
@@ -61,6 +62,7 @@ export default {
       }
     };
     const selectCategory = (categoryId) => {
+      router.push("/");
       emit("category-selected", categoryId);
       emit("close-menu");
     };

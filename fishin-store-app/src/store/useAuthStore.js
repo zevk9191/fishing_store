@@ -2,8 +2,6 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { jwtDecode as decode } from "jwt-decode";
 
-
-
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
@@ -29,6 +27,10 @@ export const useAuthStore = defineStore("auth", {
           email: userData.email,
           password: userData.password,
         });
+        await this.login({
+          email: userData.email,
+          password: userData.password,
+        });
         this.user = response.data.user;
         this.error = null;
       } catch (error) {
@@ -48,7 +50,7 @@ export const useAuthStore = defineStore("auth", {
         const decoded = decode(this.token);
         this.userRole = decoded.position; // Отримуємо роль з токена
         localStorage.setItem("userRole", this.userRole);
-
+        await this.fetchUser();
         this.user = response.data.user;
         this.error = null;
       } catch (error) {
@@ -65,10 +67,15 @@ export const useAuthStore = defineStore("auth", {
     async fetchUser() {
       if (!this.token) return;
       try {
-        const response = await axios.get("http://localhost:3000/api/auth/user", {
-          headers: { Authorization: `Bearer ${this.token}` },
-        });
+        const response = await axios.get(
+          "http://localhost:3000/api/auth/user",
+          {
+            headers: { Authorization: `Bearer ${this.token}` },
+          }
+        );
         this.user = response.data;
+        this.userRole = this.user.position; // Оновлюємо роль користувача
+        localStorage.setItem("userRole", this.userRole);
       } catch (error) {
         this.logout();
       }

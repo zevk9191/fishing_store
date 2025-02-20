@@ -130,7 +130,13 @@ export default {
       this.$emit("search-changed", ""); // Очищаємо пошуковий запит
     },
     goToProfile() {
-      this.$router.push({ path: "/profile", query: { role: this.authStore.userRole } });
+      if (this.authStore.userRole === "Admin") {
+        this.$router.push("/admin");
+      } else if (this.authStore.userRole === "Customer") {
+        this.$router.push("/user");
+      } else {
+        this.$router.push("/login");
+      }
     },
   },
 };
