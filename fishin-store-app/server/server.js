@@ -107,17 +107,24 @@ app.post("/api/login", (req, res) => {
 
 const authenticateToken = (req, res, next) => {
   const token = req.headers["authorization"]?.split(" ")[1];
+
+  console.log("Отриманий токен:", token); // Лог токена
+
   if (!token) return res.status(401).json({ message: "Access denied" });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: "Invalid token" });
+    if (err) {
+      console.log("Помилка при розшифруванні токена:", err);
+      return res.status(403).json({ message: "Invalid token" });
+    }
+
+    console.log("Розшифрований токен:", user); // Лог розшифрованого токена
+
     req.user = user;
     next();
   });
 };
 
-// ЗАХАР ПОДИВИСЬ НА ЦЕЙ ШЛЯХ І ПЕРЕКОНАЙСЯ ЩО ВІН ПРАВИЛЬНИЙ
-// app.get("/api/auth/user", authenticateToken, (req, res) => {
 app.get("/api/auth/user", authenticateToken, (req, res) => {
   db.query(
     "SELECT id, first_name, last_name, email, phone_number, position FROM Users WHERE id = ?",
@@ -131,9 +138,16 @@ app.get("/api/auth/user", authenticateToken, (req, res) => {
   );
 });
 
-app.post("/api/products", upload.single("image"), (req, res) => {
-  const { name, price, category_id } = req.body;
-  const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+app.post("/api/products", authenticateToken, (req, res) => {
+  console.log("Користувач у запиті:", req.user);
+
+  if (req.user.position !== "Admin") {
+    return res
+      .status(403)
+      .json({ message: "У вас немає прав для додавання товарів" });
+  }
+
+  const { name, price, category_id, image_url } = req.body;
 
   db.query(
     "INSERT INTO Products (name, price, category_id, image_url) VALUES (?, ?, ?, ?)",
@@ -147,8 +161,6 @@ app.post("/api/products", upload.single("image"), (req, res) => {
     }
   );
 });
-
-
 
 app.get("/api/products", (req, res) => {
   const page = req.query.page ? parseInt(req.query.page) : null;

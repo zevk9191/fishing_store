@@ -3,17 +3,31 @@
     <v-card class="mx-auto pa-5" max-width="600">
       <v-card-title>Додати новий товар</v-card-title>
       <v-form @submit.prevent="submitForm">
-        <v-autocomplete 
-        v-model="productCategory" 
-        :items="categories" 
-        item-title="name" 
-        tem-value="id"
-        label="Категорія товару"
-        clearable
-         required></v-autocomplete>
-        <v-text-field v-model="productName" label="Назва товару" required></v-text-field>
-        <v-text-field v-model.number="productPrice" label="Ціна товару" type="number" required></v-text-field>
-        <v-text-field v-model="productImage" label="URL зображення товару" required></v-text-field>
+        <v-autocomplete
+          v-model="productCategory"
+          :items="categories"
+          item-title="name"
+          item-value="id"
+          label="Категорія товару"
+          clearable
+          required
+        ></v-autocomplete>
+        <v-text-field
+          v-model="productName"
+          label="Назва товару"
+          required
+        ></v-text-field>
+        <v-text-field
+          v-model.number="productPrice"
+          label="Ціна товару"
+          type="number"
+          required
+        ></v-text-field>
+        <v-text-field
+          v-model="productImage"
+          label="URL зображення товару"
+          required
+        ></v-text-field>
         <v-btn type="submit" color="success">Додати товар</v-btn>
       </v-form>
     </v-card>
@@ -38,36 +52,23 @@ export default {
     // Завантаження категорій при завантаженні компонента
     onMounted(async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/categories");
+        const response = await axios.get(
+          "http://localhost:3000/api/categories"
+        );
         categories.value = response.data;
       } catch (error) {
         console.error("Помилка отримання категорій:", error);
       }
     });
 
-    // Перевірка ролі користувача (тільки адміністратор може додавати товар)
-    const checkAdminRole = () => {
-      const userData = localStorage.getItem("user");
-      if (!userData) return false;
-
-      try {
-        const user = JSON.parse(userData);
-        return user.position === "admin";
-      } catch (error) {
-        console.error("Помилка парсингу user:", error);
-        return false;
-      }
-    };
-
-
     // Надсилання форми
     const submitForm = async () => {
-      if (!checkAdminRole()) {
-        alert("У вас немає прав для додавання товарів!");
-        return;
-      }
-
-      if (!productCategory.value || !productName.value || !productPrice.value || !productImage.value) {
+      if (
+        !productCategory.value ||
+        !productName.value ||
+        !productPrice.value ||
+        !productImage.value
+      ) {
         alert("Будь ласка, заповніть всі поля!");
         return;
       }
@@ -75,8 +76,8 @@ export default {
       const productData = {
         name: productName.value,
         price: productPrice.value,
-        category_id: productCategory.value,
-        image: productImage.value,
+        category_id: Number(productCategory.value),
+        image_url: productImage.value,
       };
 
       try {
@@ -92,7 +93,9 @@ export default {
         router.push("/admin");
       } catch (error) {
         console.error("Помилка додавання товару:", error);
-        alert("Не вдалося додати товар. Переконайтесь, що ви авторизовані як адміністратор.");
+        alert(
+          "Не вдалося додати товар. Переконайтесь, що ви авторизовані як адміністратор."
+        );
       }
     };
 
